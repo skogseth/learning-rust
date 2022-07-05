@@ -20,6 +20,14 @@ fn main() {
     println!("{}", heavy.result(5));
     println!("{}", heavy.result(i));
     println!("{}", heavy.result(u as i32));
+
+    let v1 = vec![1, 2, 3];
+
+    let total: i32 = v1.iter().sum();
+    println!("Vec: {:?} -> sum = {}", v1, total);
+
+    let v2: Vec<_> = v1.iter().map(|x| x * x).collect();
+    println!("Vec: {:?}", v2);
 }
 
 struct Cacher<T, U, V>
