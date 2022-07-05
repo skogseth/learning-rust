@@ -10,26 +10,34 @@ impl Config {
     pub fn new(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
         args.next();
 
-        let query = match args.next() {
-            Some(arg) => arg,
-            None => return Err("Did not receive query string"),
-        };
-
-        let filename = match args.next() {
-            Some(arg) => arg,
-            None => return Err("Did not receive filename"),
-        };
-
+        let mut query: Option<String> = None;
+        let mut filename: Option<String> = None;
         let mut ignore_case = env::var("IGNORE_CASE").is_ok();
 
         for arg in args {
             let arg = Arg::from_string(arg);
-            if arg.group == 2 {
+            if arg.group == 0 {
+                if query == None {
+                    query = Some(arg.val);
+                } else if filename == None {
+                    filename = Some(arg.val);
+                }
+            } else if arg.group == 2 {
                 if arg.val == "IGNORE_CASE".to_string() {
                     ignore_case = true;
                 }
             }
         }
+
+        let query = match query {
+            Some(arg) => arg,
+            None => return Err("Did not receive query string"),
+        };
+
+        let filename = match filename {
+            Some(arg) => arg,
+            None => return Err("Did not receive filename"),
+        };
 
         Ok(Config {
             query,
