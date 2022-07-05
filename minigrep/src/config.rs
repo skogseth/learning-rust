@@ -7,20 +7,27 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("not enough arguments");
-        }
-        let query = args[1].clone();
-        let filename = args[2].clone();
+    pub fn new(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Did not receive query string"),
+        };
+
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Did not receive filename"),
+        };
 
         let mut ignore_case = env::var("IGNORE_CASE").is_ok();
 
-        if args.len() > 3 {
-            let arg = args[3].clone();
+        for arg in args {
             let arg = Arg::from_string(arg);
-            if arg.group == 2 && arg.val == "IGNORE_CASE".to_string() {
-                ignore_case = true;
+            if arg.group == 2 {
+                if arg.val == "IGNORE_CASE".to_string() {
+                    ignore_case = true;
+                }
             }
         }
 
