@@ -22,6 +22,10 @@ impl Config {
                 } else if filename == None {
                     filename = Some(arg.val);
                 }
+            } else if arg.group == 1 {
+                if arg.val == "i".to_string() {
+                    ignore_case = true;
+                }
             } else if arg.group == 2 {
                 if arg.val == "IGNORE_CASE".to_string() {
                     ignore_case = true;
