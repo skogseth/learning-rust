@@ -5,5 +5,5 @@
 pub mod card;
 pub use self::card::{rank::Rank, suit::Suit, Card};
 
-pub mod card_deck;
-pub use self::card_deck::CardDeck;
+pub mod deck;
+pub use self::deck::Deck;

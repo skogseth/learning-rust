@@ -4,8 +4,14 @@ use crate::card::{rank::Rank, suit::Suit};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Card {
-    pub rank: Rank,
-    pub suit: Suit,
+    rank: Rank,
+    suit: Suit,
+}
+
+impl Card {
+    pub fn new(rank: Rank, suit: Suit) -> Card {
+        Card { rank, suit }
+    }
 }
 
 impl std::fmt::Display for Card {
