@@ -75,7 +75,7 @@ mod tests {
     }
 
     #[test]
-    fn display() {
+    fn print() {
         for r in Rank::iterator() {
             println!("Rank: {}", r);
         }

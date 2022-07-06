@@ -44,7 +44,7 @@ mod tests {
     }
 
     #[test]
-    fn display() {
+    fn print() {
         for s in Suit::iterator() {
             println!("Suit: {}", s);
         }

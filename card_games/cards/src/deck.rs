@@ -7,9 +7,8 @@ pub const DEFAULT_DECKSIZE: usize = 52;
 pub struct Deck {
     cards: Vec<Card>,
 }
-impl Deck {
-    use super::*;
 
+impl Deck {
     pub fn new() -> Deck {
         let mut deck = Deck {
             cards: Vec::with_capacity(DEFAULT_DECKSIZE),
@@ -28,9 +27,13 @@ impl Deck {
         deck
     }
 
-    pub fn size(&self) -> usize { self.cards.len() }
+    pub fn size(&self) -> usize {
+        self.cards.len()
+    }
 
-    pub fn draw(&mut self) -> Option<Card> { self.cards.pop() }
+    pub fn draw(&mut self) -> Option<Card> {
+        self.cards.pop()
+    }
 
     pub fn shuffle(&mut self) {
         const N: usize = 1000;
@@ -42,7 +45,7 @@ impl Deck {
         let mut j: usize;
 
         for _ in 0..n {
-            j = rand::thread_rng().gen_range(1..DEFAULT_DECKSIZE);
+            j = rand::thread_rng().gen_range(1..self.size());
             self.cards.swap(i, j);
         }
     }
