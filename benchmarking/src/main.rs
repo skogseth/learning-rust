@@ -1,8 +1,29 @@
+#![allow(dead_code)]
+
 mod factorial;
+mod monads;
+
+use monads::Monad;
+
+
 
 fn main() {
-    let times = 1_000_000;
-    benchmark_factorial(times);
+    benchmark_factorial(1_000_000);
+
+    /*
+    let a = Some(3);
+    let b = a.attempt(add_one);
+
+    if let Some(val) = b {
+        println!("b = {val}");
+    } else {
+        println!("No value found for b");
+    }
+    */
+}
+
+fn add_one(a: i32) -> i32 {
+    a + 1
 }
 
 fn benchmark_factorial(times: usize) {

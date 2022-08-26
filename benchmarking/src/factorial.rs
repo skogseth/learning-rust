@@ -1,12 +1,12 @@
 use std::time::Instant;
 
 pub fn iter(n: u128) -> u128 {
-    (1..n + 1).product()
+    (1..n + 1).rev().product()
 }
 
 pub fn looping(n: u128) -> u128 {
     let mut acc = n;
-    for i in 1..n {
+    for i in (1..n).rev() {
         acc *= i;
     }
     acc
@@ -21,7 +21,7 @@ pub fn recursive(n: u128) -> u128 {
 }
 
 pub fn recursive_with_tail(n: u128) -> u128 {
-    tail(1, n)
+    tail(n, n-1)
 }
 
 fn tail(acc: u128, n: u128) -> u128 {
