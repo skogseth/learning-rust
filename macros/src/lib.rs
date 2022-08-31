@@ -17,3 +17,13 @@ macro_rules! add {
         }
     };
 }
+
+#[macro_export]
+macro_rules! railway {
+    ( $function:ident($result:expr) ) => {
+        match $result {
+            Ok(val) => $function(val),
+            Err(e) => Err(e),
+        }
+    }
+}
