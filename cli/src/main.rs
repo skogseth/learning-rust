@@ -1,23 +1,40 @@
 use clap::Parser;
+use tokio::fs::File;
+use tokio::io::AsyncWriteExt;
 
 #[derive(Parser, Debug)]
+#[clap(version)]
 struct Args {
-    // Name of the person to greet
-    #[clap(short, long, value_parser)]
-    name: String,
+    #[clap(value_parser)]
+    number_of_values: usize,
 
-    // Length of pause before greet
-    #[clap(short, long, value_parser, default_value_t = 3)]
-    count: u8,
+    #[clap(short, long, value_parser, default_value = "data.txt")]
+    filename: String,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), std::io::Error> {
     let args = Args::parse();
 
+    let vals = (0..args.number_of_values)
+        .filter_map(|x| {
+            let squared = x * x;
+            if squared % 2 == 0 {
+                Some(squared)
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>();
+
     let mut str = String::new();
-    for _ in 0..args.count {
-        str.push('.');
+    for val in vals {
+        str += &val.to_string();
+        str.push('\t');
     }
 
-    println!("Hello{} {}", str, args.name);
+    let mut file = File::create(args.filename).await?;
+    file.write_all(str.as_bytes()).await?;
+
+    Ok(())
 }
