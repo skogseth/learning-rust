@@ -3,6 +3,9 @@ fn main() {
     let a = 6;
     let b = 4;
     let c = unsafe { cmath::multiply(a, b) };
-    println!("Hello!");
     println!("{} * {} = {}", a, b, c);
+
+    let d = 36.;
+    let e = unsafe { auto::sqrt(d) };
+    println!("sqrt({}) = {}", d, e);
 }
