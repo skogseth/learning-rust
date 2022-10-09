@@ -5,16 +5,16 @@ use log::LevelFilter;
 use anyhow::Error as AnyError;
 
 #[derive(Parser, Debug)]
-#[clap(version)]
+#[command(version)]
 struct Args {
-    #[clap(value_parser)]
+    #[arg(value_parser)]
     max_value: usize,
 
-    #[clap(short, long, value_parser, default_value = "data.txt")]
+    #[arg(short, long, value_parser, default_value = "data.txt")]
     filename: String,
 
     /// Set verbosity
-    #[clap(short, long, action = clap::ArgAction::Count)]
+    #[arg(short, long, action = clap::ArgAction::Count)]
     verbosity: u8,
 }
 
@@ -24,8 +24,9 @@ fn main() -> Result<(), AnyError> {
 
     let log_level = match args.verbosity {
         0 => LevelFilter::Error,
-        1 => LevelFilter::Info,
-        2 => LevelFilter::Debug,
+        1 => LevelFilter::Warn,
+        2 => LevelFilter::Info,
+        3 => LevelFilter::Debug,
         _ => LevelFilter::Trace,
     };
 
