@@ -5,7 +5,7 @@ use std::marker::PhantomData;
 pub struct UniquePtr<T> {
     ptr: *mut u8,
     layout: Layout,
-    phantom: PhantomData<T>,
+    marker: PhantomData<T>,
 }
 
 impl<T> UniquePtr<T> {
@@ -17,8 +17,14 @@ impl<T> UniquePtr<T> {
                 handle_alloc_error(layout);
             }
             *(ptr as *mut T) = val;
-            let phantom = PhantomData::default();
-            UniquePtr { ptr, layout, phantom }
+            let marker = PhantomData::default();
+            UniquePtr { ptr, layout, marker }
+        }
+    }
+
+    pub fn set(&mut self, val: T) {
+        unsafe {
+            *(self.ptr as *mut T) = val;
         }
     }
 }

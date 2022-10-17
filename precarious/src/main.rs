@@ -27,9 +27,11 @@ fn main() {
     }    
 
     let ptr = {
-        let ptr = UniquePtr::new(7);
-        println!("inner scope: val = {}", ptr.get());
+        let mut ptr = UniquePtr::new(7);
+        println!("inner scope: initialized to {}", ptr.get());
+        ptr.set(4);
+        println!("inner scope: changed to {}", ptr.get());
         ptr
     };
-    println!("outer scope: still {}", ptr.get());
+    println!("outer scope: immutably {}", ptr.get());
 }
