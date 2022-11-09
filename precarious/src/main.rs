@@ -15,4 +15,12 @@ fn main() {
     let val = ptr.get();
     assert_eq!(val, 4);
     println!("{:#?}", ptr);
+
+    lets_leak_memory();
 }
+
+fn lets_leak_memory() {
+    let ptr = UniquePtr::new(45u32);
+    std::mem::forget(ptr);
+}
+
