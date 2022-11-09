@@ -2,6 +2,7 @@ use std::alloc::{alloc, dealloc, handle_alloc_error};
 use std::alloc::Layout;
 use std::marker::PhantomData;
 
+#[derive(Debug)]
 pub struct UniquePtr<T> {
     ptr: *mut u8,
     layout: Layout,
@@ -21,6 +22,7 @@ impl<T> UniquePtr<T> {
             UniquePtr { ptr, layout, marker }
         }
     }
+    
 
     pub fn set(&mut self, val: T) {
         unsafe {
@@ -45,3 +47,12 @@ impl<T> Drop for UniquePtr<T> {
         }
     }
 }
+
+impl<T: Copy + std::fmt::Display> std::fmt::Display for UniquePtr<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let val = unsafe { *(self.ptr as *mut T) };
+        write!(f, "{}", val)
+    }
+}
+
+
