@@ -6,7 +6,7 @@ use std::marker::PhantomData;
 pub struct UniquePtr<T> {
     ptr: *mut u8,
     layout: Layout,
-    marker: PhantomData<T>,
+    _marker: PhantomData<T>,
 }
 
 impl<T> UniquePtr<T> {
@@ -22,8 +22,8 @@ impl<T> UniquePtr<T> {
                 handle_alloc_error(layout);
             }
             *(ptr as *mut T) = val;
-            let marker = PhantomData::default();
-            UniquePtr { ptr, layout, marker }
+            let _marker = PhantomData::default();
+            UniquePtr { ptr, layout, _marker }
         }
     }
     
@@ -72,6 +72,9 @@ impl<T> std::ops::Deref for UniquePtr<T> {
     }
 }
 
+unsafe impl<T: Send> Send for UniquePtr<T> {}
+unsafe impl<T: Sync> Sync for UniquePtr<T> {}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -94,6 +97,32 @@ mod tests {
         let ptr = UniquePtr::new(3.1415);
         let string = format!("{}", ptr);
         assert_eq!(string.as_str(), "3.1415");
+    }
+
+    #[test]
+    fn send() {
+        let ptr = UniquePtr::new(vec![1, 2, 3]);
+        std::thread::spawn(move || {
+            assert_eq!(ptr[0], 1);
+            assert_eq!(ptr[1], 2);
+            assert_eq!(ptr[2], 3);
+        });
+    }
+
+    #[test]
+    fn sync() {
+        let ptr = UniquePtr::new(String::from("hello world"));
+        std::thread::scope(|s| {
+            s.spawn(|| {
+                let s = &ptr;
+                assert_eq!(**s, "hello world");
+            });
+
+            s.spawn(|| {
+                let s = &ptr;
+                assert_eq!(**s, "hello world");
+            });
+        });
     }
 }
 
