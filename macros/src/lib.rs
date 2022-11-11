@@ -21,6 +21,12 @@ mod tests {
 
     #[test]
     fn simple() {
+        let a = pipes!{ 4 => square };
+        assert_eq!(a, 16);
+    }
+
+    #[test]
+    fn double() {
         let a = pipes!{ 4 => add_one => square };
         assert_eq!(a, 25);
     }
