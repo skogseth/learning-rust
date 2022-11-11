@@ -1,29 +1,46 @@
 #[macro_export]
-macro_rules! add {
-    ( $( $x:expr ),+ ; $y:ty ) => {
+macro_rules! pipes {
+    ( $var:expr $( => $function:ident )* ) => {
         {
-            0
-            $(
-                + $x as $y
-            )*
-        }
-    };
-    ( $( $x:expr ),+ ) => {
-        {
-            0
-            $(
-                + $x
-            )*
-        }
-    };
-}
-
-#[macro_export]
-macro_rules! railway {
-    ( $function:ident($result:expr) ) => {
-        match $result {
-            Ok(val) => $function(val),
-            Err(e) => Err(e),
+            let temp = $var;
+            $( let temp = $function(temp); )*
+            temp
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn single() {
+        let a = pipes!{ 4 + 3 + 2 + 1 };
+        assert_eq!(a, 10);
+    }
+
+    #[test]
+    fn simple() {
+        let a = pipes!{ 4 => add_one => square };
+        assert_eq!(a, 25);
+    }
+
+    #[test]
+    fn type_changing() {
+        let a = pipes!{ 3 + 2 => square => half };
+        assert_eq!(a, 12.5);
+    }
+
+    fn add_one(i: i32) -> i32 {
+        i + 1
+    }
+
+    fn square(i: i32) -> i32 {
+        i * i
+    }
+
+    fn half(i: i32) -> f32 {
+        (i as f32) / 2.
+    }
+}
+

@@ -1,29 +1,23 @@
 use macros::*;
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+struct Complex {
+    a: f64,
+    b: f64,
+}
+
+impl Complex {
+    pub fn multiply(self, other: Complex) -> Self {
+        Complex {
+            a: self.a * other.a - self.b * other.b,
+            b: self.a * other.b + self.b * other.a,
+        }
+    }
+}
+
 fn main() {
-    println!("Hello, world!");
-
-    let a = add!(1, 2, 3);
-    let b = add!(2);
-    // let c = add!(); // compilation error
-
-    println!("a = {a}");
-    println!("a = {b}");
-
-    let d = add!(8, 16; u8);
-    println!("d = {d}");
-
-    let mut result = Ok(2);
-    for _ in 0..4 {
-        result = railway!{ decrement(result) };
-        println!("{result:?}");
-    }
+    let rotate = |z: Complex| z.multiply(Complex { a: 0., b: 1. });
+    let z = pipes!{ Complex { a: 1., b: 0. } => rotate => rotate => rotate };
+    println!("z: {:#?}", z);
 }
 
-fn decrement(val: usize) -> Result<usize, String> {
-    if val > 0 {
-        Ok(val - 1)
-    } else {
-        Err(String::from("Value too small to decrement!"))
-    }
-}
