@@ -1,9 +1,9 @@
-use std::time::Instant;
-
+#[inline]
 pub fn iter(n: u128) -> u128 {
     (1..n + 1).rev().product()
 }
 
+#[inline]
 pub fn looping(n: u128) -> u128 {
     let mut acc = n;
     for i in (1..n).rev() {
@@ -12,6 +12,7 @@ pub fn looping(n: u128) -> u128 {
     acc
 }
 
+#[inline]
 pub fn recursive(n: u128) -> u128 {
     if n == 0 {
         1
@@ -20,10 +21,12 @@ pub fn recursive(n: u128) -> u128 {
     }
 }
 
+#[inline]
 pub fn recursive_with_tail(n: u128) -> u128 {
     tail(n, n-1)
 }
 
+#[inline]
 fn tail(acc: u128, n: u128) -> u128 {
     if n == 0 {
         acc
@@ -32,12 +35,29 @@ fn tail(acc: u128, n: u128) -> u128 {
     }
 }
 
-pub fn time<F: Fn(u128) -> u128>(f: F, n: u128, times: usize) -> u128 {
-    let mut total_time = 0;
-    for _ in 0..times {
-        let now = Instant::now();
-        f(n);
-        total_time += now.elapsed().as_nanos();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const TEN: u128 = 3628800;
+    
+    #[test]
+    fn test_iter() {
+        assert_eq!(iter(10), TEN);
     }
-    total_time / times as u128
+
+    #[test]
+    fn test_looping() {
+        assert_eq!(looping(10), TEN);
+    }
+
+    #[test]
+    fn test_recursive() {
+        assert_eq!(recursive(10), TEN);
+    }
+
+    #[test]
+    fn test_recursive_with_tail() {
+        assert_eq!(recursive_with_tail(10), TEN);
+    }
 }
