@@ -4,7 +4,8 @@ use benchmarking::factorial;
 
 pub fn benchmark_variants(c: &mut Criterion) {
     let mut group = c.benchmark_group("Factorial");
-    for i in [10u128, 20u128, 30u128].iter() {
+    let tests: [u128; 13] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20];
+    for i in tests.iter() {
         group.bench_with_input(BenchmarkId::new("Iter", i), i, |b, i| b.iter(|| factorial::iter(*i)));
         group.bench_with_input(BenchmarkId::new("Looping", i), i, |b, i| b.iter(|| factorial::looping(*i)));
         group.bench_with_input(BenchmarkId::new("Recursive", i), i, |b, i| b.iter(|| factorial::recursive(*i)));
