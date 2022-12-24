@@ -7,7 +7,7 @@ pub fn pass_through(input: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_derive(Enumerator)]
-pub fn derive(input: TokenStream) -> TokenStream {
+pub fn derive_enumerator(input: TokenStream) -> TokenStream {
     let ast = syn::parse_macro_input!(input as syn::DeriveInput);
     let name = &ast.ident;
     
@@ -33,6 +33,22 @@ pub fn derive(input: TokenStream) -> TokenStream {
         }
     };
 
-    expanded.into()
+    TokenStream::from(expanded)
 }
+
+#[proc_macro_derive(Datapoint)]
+pub fn derive_datapoint(input: TokenStream) -> TokenStream {
+    let ast = syn::parse_macro_input!(input as syn::DeriveInput);
+    let name = &ast.ident;
+
+    let expanded = quote! {
+        impl Datapoint for #name {
+            fn record(&self) -> String {
+                format!("{:#?}", self) 
+            }
+        }
+    };
+
+    TokenStream::from(expanded)
+}   
 

@@ -1,6 +1,10 @@
 use declarative_macros::*;
 use procedural_macros::*;
 
+pub trait Datapoint {
+    fn record(&self) -> String;
+}
+
 fn main() {
     let rotate = |z: Complex| z.multiply(Complex { a: 0., b: 1. });
     let z = pipes!{ Complex { a: 1., b: 0. } => rotate => rotate => rotate };
@@ -13,6 +17,9 @@ fn main() {
     for enum_element in Hands::enumerator() {
         println!("{:?}", enum_element);
     }
+
+    let a = Stuff::new();
+    println!("{}", a.record());
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -35,3 +42,19 @@ enum Hands {
     Left,
     Right,
 }
+
+#[derive(Debug, Datapoint)]
+pub struct Stuff {
+    cols: usize,
+    rows: usize,
+}
+
+impl Stuff {
+    fn new() -> Self {
+        Stuff {
+            cols: 0,
+            rows: 0,
+        }
+    }
+}
+
